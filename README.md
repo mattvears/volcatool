@@ -1,5 +1,5 @@
 # Download VolcaTool
-[Download a zip file of the latest version.](https://dl.dropboxusercontent.com/u/14130241/volcatool.zip)
+[Download a zip file of the latest version.](https://dl.dropboxusercontent.com/u/14130241/VolcaTool-1.1.zip)
 
 # About VolcaTool
 VolcaTool is an open source windows utility to port folders of wav files to the Korg Volca Sample digital sample sequencer. It is written in C# using the Syro API.
