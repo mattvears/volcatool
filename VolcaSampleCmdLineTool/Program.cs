@@ -51,16 +51,14 @@ namespace VolcaSampleCmdLineTool
                     string.Join(
                         Environment.NewLine,
                         "Examples:", Environment.NewLine,
-                        "\t" + "Erase a range of files:",
-                        "\t\t" + "volcatool help", Environment.NewLine,
                         "\t" + "Transfer a directory of files:",
-                        "\t\t" + "volcatool -mode=transfer -dir=.\\samples", Environment.NewLine,
-                        "\t" + "Erase all sample slots:", 
-                        "\t\t" + "volcatool -mode=erase -erase=0-99",
-                        "\t" + "Erase a range of sample slots:", Environment.NewLine,
-                        "\t\t" + "volcatool -mode=erase -erase=25-30",
-                        "\t" + "Erase a list of sample slots:", Environment.NewLine,
-                        "\t\t" + "volcatool -mode=erase -erase=0,1,2,3,4",
+                        "\t\t" + "volcatool -mode=transfer -dir=.\\samples" + Environment.NewLine,
+                        "\t" + "Erase all sample slots:",
+                        "\t\t" + "volcatool -mode=erase -erase=0-99" + Environment.NewLine,
+                        "\t" + "Erase a range of sample slots:",
+                        "\t\t" + "volcatool -mode=erase -erase=25-30" + Environment.NewLine,
+                        "\t" + "Erase a list of sample slots:",
+                        "\t\t" + "volcatool -mode=erase -erase=0,1,2,3,4" + Environment.NewLine,
                         "\t" + "Erase a single sample slot:",
                         "\t\t" + "volcatool -mode=erase -erase=42"));
                 
