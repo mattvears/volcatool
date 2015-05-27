@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>VolcaSampleCmdLineTool</RootNamespace>
-    <AssemblyName>VolcaSampleCmdLineTool</AssemblyName>
+    <AssemblyName>volcatool</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
@@ -76,6 +76,7 @@
   </Target>
     -->
   <Target Name="AfterBuild">
+    <Delete Files="$(ProjectDir)\bin\$(Configuration)\SdkBridge.dll" />
     <Copy SourceFiles="$(SolutionDir)\$(Configuration)\SdkBridge.dll" DestinationFolder="$(ProjectDir)\bin\$(Configuration)\" />
   </Target>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

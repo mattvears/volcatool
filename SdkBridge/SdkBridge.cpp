@@ -171,9 +171,12 @@ unsigned int Prepare(unsigned int dataType, unsigned int totalSamples, unsigned 
 	uint16_t num_of_ch, sample_byte;
 	uint32_t num_of_frame;
 
-	if (totalSamples + startingSampleNumber > 99)
+	if (dataType != 2) 
 	{
-		return 3; /** sample slot number exceeds available slot numbers **/
+		if (totalSamples + startingSampleNumber > 99)
+		{
+			return 3; /** sample slot number exceeds available slot numbers **/
+		}
 	}
 
 	if (!syro_data)
@@ -187,112 +190,123 @@ unsigned int Prepare(unsigned int dataType, unsigned int totalSamples, unsigned 
 		return 4; /** sample count is out of range **/
 	}
 
-	char* fn = fileName->Data;
-	src = read_file(fn, &size); 
+	// prepare data if this isn't an erase command.
+	if (dataType != 2) { 
+		char* fn = fileName->Data;
+		src = read_file(fn, &size); 
 
-	//------- check header/fmt -------*/
-	if (memcmp(src, wav_header, 4)) {
-		free(src);
-		return 2; /** illegal data **/
-	}
-
-	if (memcmp((src + WAV_POS_WAVEFMT), (wav_header + WAV_POS_WAVEFMT), 8)) {
-		free(src);
-		return 2; /** illegal data **/
-	}
-
-	wav_pos = WAV_POS_WAVEFMT + 4;		// 'fmt ' pos
-
-	if (get_16Bit_value(src + wav_pos + 8 + WAVFMT_POS_ENCODE) != 1) {
-		free(src);
-		return 2; /** illegal data **/
-	}
-
-	num_of_ch = get_16Bit_value(src + wav_pos + 8 + WAVFMT_POS_CHANNEL);
-	if ((num_of_ch != 1) && (num_of_ch != 2)) {
-		free(src);
-		return 2; /** illegal data **/
-	}
-	
-	uint16_t num_of_bit;
-
-	num_of_bit = get_16Bit_value(src + wav_pos + 8 + WAVFMT_POS_BIT);
-	if ((num_of_bit != 16) && (num_of_bit != 24)) {
-		free(src);
-		return 2; /** illegal data **/
-	}
-
-	sample_byte = (num_of_bit / 8);
-
-	wav_fs = get_32Bit_value(src + wav_pos + 8 + WAVFMT_POS_FS);
-
-	//------- search 'data' -------*/
-	for (;;) {
-		chunk_size = get_32Bit_value(src + wav_pos + 4);
-		if (!memcmp((src + wav_pos), "data", 4)) {
-			break;
+		//------- check header/fmt -------*/
+		if (memcmp(src, wav_header, 4)) {
+			free(src);
+			return 2; /** illegal data **/
 		}
-		wav_pos += chunk_size + 8;
-		if ((wav_pos + 8) > size) {
+
+		if (memcmp((src + WAV_POS_WAVEFMT), (wav_header + WAV_POS_WAVEFMT), 8)) {
+			free(src);
+			return 2; /** illegal data **/
+		}
+
+		wav_pos = WAV_POS_WAVEFMT + 4;		// 'fmt ' pos
+
+		if (get_16Bit_value(src + wav_pos + 8 + WAVFMT_POS_ENCODE) != 1) {
+			free(src);
+			return 2; /** illegal data **/
+		}
+
+		num_of_ch = get_16Bit_value(src + wav_pos + 8 + WAVFMT_POS_CHANNEL);
+		if ((num_of_ch != 1) && (num_of_ch != 2)) {
+			free(src);
+			return 2; /** illegal data **/
+		}
+
+		uint16_t num_of_bit;
+
+		num_of_bit = get_16Bit_value(src + wav_pos + 8 + WAVFMT_POS_BIT);
+		if ((num_of_bit != 16) && (num_of_bit != 24)) {
+			free(src);
+			return 2; /** illegal data **/
+		}
+
+		sample_byte = (num_of_bit / 8);
+
+		wav_fs = get_32Bit_value(src + wav_pos + 8 + WAVFMT_POS_FS);
+
+		//------- search 'data' -------*/
+		for (;;) {
+			chunk_size = get_32Bit_value(src + wav_pos + 4);
+			if (!memcmp((src + wav_pos), "data", 4)) {
+				break;
+			}
+			wav_pos += chunk_size + 8;
+			if ((wav_pos + 8) > size) {
+				free(src);
+				return false;
+			}
+		}
+
+		if ((wav_pos + chunk_size + 8) > size) {
+			free(src);
+			return false;
+		}
+
+		num_of_frame = chunk_size / (num_of_ch * sample_byte);
+		chunk_size = (num_of_frame * 2);
+	} // end if there is file data.
+
+	syro_data->DataType = (SyroDataType)dataType;
+
+	if (dataType != 2) {
+		syro_data->pData = (uint8_t*)malloc(chunk_size);
+		if (!syro_data->pData) {
 			free(src);
 			return false;
 		}
 	}
-
-	if ((wav_pos + chunk_size + 8) > size) {
-		free(src);
-		return false;
-	}
-
-	num_of_frame = chunk_size / (num_of_ch * sample_byte);
-	chunk_size = (num_of_frame * 2);
 	
-	syro_data->DataType = (SyroDataType)dataType;
-	syro_data->pData = (uint8_t*)malloc(chunk_size);
-	
-	if (!syro_data->pData) {
-		free(src);
-		return false;
-	}
+	if (dataType != 2) {
+		//------- convert to 1ch, 16Bit  -------*/
+		uint8_t *poss;
+		int16_t *posd;
+		int32_t dat, datf;
+		uint16_t ch, sbyte;
 
-	//------- convert to 1ch, 16Bit  -------*/
-	uint8_t *poss;
-	int16_t *posd;
-	int32_t dat, datf;
-	uint16_t ch, sbyte;
+		poss = (src + wav_pos + 8);
+		posd = (int16_t *)syro_data->pData;
 
-	poss = (src + wav_pos + 8);
-	posd = (int16_t *)syro_data->pData;
-
-	for (;;) {
-		datf = 0;
-		for (ch = 0; ch<num_of_ch; ch++) {
-			dat = ((int8_t *)poss)[sample_byte - 1];
-			for (sbyte = 1; sbyte<sample_byte; sbyte++) {
-				dat <<= 8;
-				dat |= poss[sample_byte - 1 - sbyte];
+		for (;;) {
+			datf = 0;
+			for (ch = 0; ch < num_of_ch; ch++) {
+				dat = ((int8_t *)poss)[sample_byte - 1];
+				for (sbyte = 1; sbyte < sample_byte; sbyte++) {
+					dat <<= 8;
+					dat |= poss[sample_byte - 1 - sbyte];
+				}
+				poss += sample_byte;
+				datf += dat;
 			}
-			poss += sample_byte;
-			datf += dat;
+			datf /= num_of_ch;
+			*posd++ = (int16_t)datf;
+			if (!(--num_of_frame)) {
+				break;
+			}
 		}
-		datf /= num_of_ch;
-		*posd++ = (int16_t)datf;
-		if (!(--num_of_frame)) {
-			break;
-		}
+
+		syro_data->Size = chunk_size;
+		syro_data->Fs = wav_fs;
+		syro_data->SampleEndian = LittleEndian;
+		syro_data->Quality = 16;
 	}
 
 	syro_data->Number = sample_number;
-	syro_data->Size = chunk_size;
-	syro_data->Fs = wav_fs;
-	syro_data->SampleEndian = LittleEndian;
-	syro_data->Quality = 16;
 
 	syro_data++;
 	sample_count += 1;
 	sample_number++;
 
-	free(src);
+	if (dataType != 2) {
+		free(src);
+	}
+
 	return 0;
 }
 
@@ -342,7 +356,9 @@ unsigned int Convert(STRSTRUCT* newFileName)
 	}
 
 	SyroVolcaSample_End(handle);
-	free_syrodata(syro_data, sample_count);
+	if (syro_data->DataType != 2) {
+		free_syrodata(syro_data, sample_count);
+	}
 
 	//----- write ------
 	char* fn = newFileName->Data;

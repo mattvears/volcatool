@@ -43,6 +43,15 @@ namespace Gui
             }
         }
 
+        public void Prepare(List<int> slotsToErase)
+        {
+            foreach (var slot in slotsToErase)
+            {
+                var fileNameString = StringToStrStruct(string.Empty);
+                _Prepare((uint) SyroDataType.DataType_Sample_Erase, (uint)slotsToErase.Count(), (uint)slot, ref fileNameString);
+            }
+        }
+
         [DllImport(
             "SdkBridge.dll",
             EntryPoint = "Convert", 
