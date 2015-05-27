@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Gui
 {
@@ -24,7 +23,7 @@ namespace Gui
 
             if (res != 0)
             {
-                throw new Exception("Expected SyroStatus during Convert: " + res);
+                throw new Exception("Unexpected SyroStatus during Convert: " + res);
             }
         }
 
@@ -39,7 +38,7 @@ namespace Gui
 
                 if (res != 0)
                 {
-                    throw new Exception("Expected SyroStatus during Prepare: " + res);
+                    throw new Exception("Unexpected SyroStatus during Prepare: " + res);
                 }
             }
         }

@@ -28,14 +28,26 @@ namespace VolcaSampleCmdLineTool.Decorators
             }
 
             var newFileName = Path.Combine(_outputPath, waveFile.Name);
-
-            using (var wr = new AudioFileReader(waveFile.FullName))
+            try
             {
-                var resampler = new WdlResamplingSampleProvider(wr, 16000);
-                WaveFileWriter.CreateWaveFile16(newFileName, resampler);
-            }
+                using (var wr = new AudioFileReader(waveFile.FullName))
+                {
+                    var resampler = new WdlResamplingSampleProvider(wr, 16000);
+                    WaveFileWriter.CreateWaveFile16(newFileName, resampler);
+                    var newFileInfo = new FileInfo(newFileName);
 
-            return base.Process(new FileInfo(newFileName));
+                    var transferState = TransferState.Instance();
+                    transferState.FileSizes.Add(waveFile.Name, newFileInfo.Length);
+                    transferState.AllFilesSize += newFileInfo.Length;
+                    return base.Process(newFileInfo);
+                }
+            }
+            catch (IOException ioException)
+            {
+                Console.Error.WriteLine("Could not convert file '{0}'", waveFile.FullName);
+                Console.Error.WriteLine("Reason: {0}", ioException.Message);
+                return null;
+            }
         }
     }
 }

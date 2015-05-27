@@ -33,7 +33,11 @@ namespace VolcaSampleCmdLineTool
                         baseComponent);
                 }
 
-                fileInfoList.Add(baseComponent.Process(file));
+                var processed = baseComponent.Process(file);
+                if (processed != null)
+                {
+                    fileInfoList.Add(processed);
+                }
             }
 
             return fileInfoList;

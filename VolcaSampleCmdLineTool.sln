@@ -3,28 +3,26 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SdkPort", "SdkPOrt\SdkPOrt.vcxproj", "{7A8DEDAC-77AB-4C0D-85EF-0B06579739FB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SdkPort", "SdkPort\SdkPOrt.vcxproj", "{7A8DEDAC-77AB-4C0D-85EF-0B06579739FB}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SdkBridge", "SdkBridge\SdkBridge.vcxproj", "{20DF1A91-D0F9-475A-9544-8C8B6050958E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VolcaSampleCmdLineTool", "VolcaSampleCmdLineTool\VolcaSampleCmdLineTool.csproj", "{BE5C9106-A879-4922-9BC8-C1BC5ED6B1F0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{58D4DE46-4FDF-453B-A467-FDCE51DB4DAC}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1C55A654-C378-43B4-AD91-C51182F79F31}"
+	ProjectSection(SolutionItems) = preProject
+		AllData\all_sample_empty.alldata = AllData\all_sample_empty.alldata
+		AllData\all_sample_preset.alldata = AllData\all_sample_preset.alldata
+	EndProjectSection
+EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://mattvears.visualstudio.com/defaultcollection
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = SdkBridge\\SdkBridge.vcxproj
-		SccProjectName1 = SdkBridge
-		SccLocalPath1 = SdkBridge
-		SccProjectUniqueName2 = SdkPOrt\\SdkPOrt.vcxproj
-		SccProjectName2 = SdkPOrt
-		SccLocalPath2 = SdkPOrt
-		SccProjectUniqueName3 = VolcaSampleCmdLineTool\\VolcaSampleCmdLineTool.csproj
-		SccProjectName3 = VolcaSampleCmdLineTool
-		SccLocalPath3 = VolcaSampleCmdLineTool
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
