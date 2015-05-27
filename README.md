@@ -1,13 +1,11 @@
-<<<<<<< HEAD
-=======
 # Download VolcaTool
 [Download a zip file of the latest version.](https://dl.dropboxusercontent.com/u/14130241/VolcaTool-1.2.zip)
 
->>>>>>> origin/master
+
 # About VolcaTool
 VolcaTool is an open source windows utility to port folders of wav files to the Korg Volca Sample digital sample sequencer. It is written in C# using the Syro API.
 
-This is a preview version. This software is not written or endorsed by Korg. Use at your own risk.
+This software is not written or endorsed by Korg. Use at your own risk.
 
 # Quick Start:
 1. Arrange the samples you'd like on your VolcaSample into a directory.
@@ -38,8 +36,4 @@ The longest a sample can be (in seconds) before it is trimmed.
 >
 > Be careful when playing syro stream through speakers or headphones. Playback at large volumes may cause damage to equipment and/or ears.
 
-<<<<<<< HEAD
 If you have errors syncing, the most likely culprit is your PC’s audio setup. Be sure to disable any sort of EQ or effects. If you have beats audio, you will probably have to uninstall it. Don’t forget about Dre.
-=======
-If you have errors syncing, the most likely culprit is your PC’s audio setup. Be sure to disable any sort of EQ or effects. If you have beats audio, you will probably have to uninstall it. Don’t forget about Dre.
->>>>>>> origin/master
