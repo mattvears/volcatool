@@ -10,20 +10,22 @@ This software is not written or endorsed by Korg. Use at your own risk.
 # Usages:
 
 *Transfer a directory of files:*
-        volcatool -mode=transfer -dir=.\samples
+volcatool -mode=transfer -dir=.\samples
+
+*Fill slots starting at a slot number:*
+volcatool -mode=transfer -dir=.\samples --sample_number_start=10
 
 *Erase all sample slots:*
-        volcatool -mode=erase -erase=0-99
+volcatool -mode=erase -erase=0-99
 
 *Erase a range of sample slots:*
-        volcatool -mode=erase -erase=25-30
+volcatool -mode=erase -erase=25-30
 
 *Erase a list of sample slots:*
-        volcatool -mode=erase -erase=0,1,2,3,4
+volcatool -mode=erase -erase=0,1,2,3,4
 
-*Erase a single sample slot:*
-        volcatool -mode=erase -erase=42
-
+*Erase a single sample slot:* 
+volcatool -mode=erase -erase=42
 
 # Command line options:
       --help                 Show this message and exit.
@@ -43,7 +45,6 @@ This software is not written or endorsed by Korg. Use at your own risk.
                                added incrementally after it.
       --max_seconds=VALUE    The longest a sample can be (in seconds) before
                                it is trimmed.
-      --normalize            normalize wave files
 
 
 # About Syncing:
