@@ -43,7 +43,7 @@ namespace VolcaSampleCmdLineTool.Decorators
         private static void TrimWavFile(WaveFileReader reader, WaveFileWriter writer, int startPos, int endPos)
         {
             reader.Position = startPos;
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[reader.WaveFormat.BlockAlign];
             while (reader.Position < endPos)
             {
                 int bytesRequired = (int)(endPos - reader.Position);
