@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Decorators\WavFileConvertDecorator.cs" />
     <Compile Include="Decorators\WavFileMaxLengthDecorator.cs" />
+    <Compile Include="Decorators\WavFileNormalizationDecorator.cs" />
     <Compile Include="Decorators\WavProcessingBaseComponent.cs" />
     <Compile Include="Decorators\WavProcessingComponent.cs" />
     <Compile Include="Decorators\WavProcessingComponentDecorator.cs" />

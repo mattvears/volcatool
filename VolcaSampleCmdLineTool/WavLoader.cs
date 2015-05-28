@@ -17,7 +17,8 @@ namespace VolcaSampleCmdLineTool
         }
 
         public IEnumerable<FileInfo> LoadWavsFromDirectory(
-            TimeSpan? maxSampleLength = null)
+            TimeSpan? maxSampleLength = null,
+            bool normalize = false)
         {
             var fileInfoList = new List<FileInfo>();
 
@@ -31,6 +32,11 @@ namespace VolcaSampleCmdLineTool
                     baseComponent = new WavFileMaxLengthDecorator(
                         (TimeSpan) maxSampleLength, 
                         baseComponent);
+                }
+
+                if (normalize)
+                {
+                    baseComponent = new WavFileNormalizationDecorator(baseComponent);
                 }
 
                 var processed = baseComponent.Process(file);

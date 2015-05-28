@@ -11,13 +11,14 @@ namespace VolcaSampleCmdLineTool.Decorators
 
         public WavFileMaxLengthDecorator(TimeSpan length, WavProcessingComponent wavProcessingComponent) : base(wavProcessingComponent)
         {
-            this._cutFromEnd = length;
+            _cutFromEnd = length;
+            
         }
 
         public override FileInfo Process(FileInfo waveFile)
         {
             Debug.Assert(waveFile.Directory != null, "waveFile.Directory != null");
-            var newName = Path.Combine(waveFile.Directory.FullName, waveFile.Name + "." + Guid.NewGuid().ToString("D") + "snipped.wav");
+            var newName = Path.Combine(WorkingDirectoryInfo.FullName, waveFile.Name + "." + Guid.NewGuid().ToString("D") + "-snipped.wav");
             using (WaveFileReader reader = new WaveFileReader(waveFile.FullName))
             {
                 var bps = reader.WaveFormat.AverageBytesPerSecond;

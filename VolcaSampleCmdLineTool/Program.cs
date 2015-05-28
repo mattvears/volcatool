@@ -18,6 +18,7 @@ namespace VolcaSampleCmdLineTool
             var showHelp = false;
             var eraseSlots = string.Empty;
             var mode = string.Empty;
+            var normalize = false;
 
             var optionSet = new OptionSet
             {
@@ -27,14 +28,9 @@ namespace VolcaSampleCmdLineTool
                 {"dir=",    "[REQUIRED for 'transfer' mode.] Directory containing samples to transfer. REQUIRED if transferring.", v => dir = v},
                 {"result=", "Provide a filename to create the resulting wav file (default is 'result.wav').", v => resultWav = v},
                 {"sns|sample_number_start=", "The sample slot number to start writing to. This is the starting sample slot number, samples are added incrementally after it.", v => Int32.TryParse(v, out sampleNumber)},
-                {"max_seconds=", "The longest a sample can be (in seconds) before it is trimmed.", v =>
-                {
-                    double tmpMax;
-                    if (Double.TryParse(v, out tmpMax))
-                    {
-                        maxSeconds = tmpMax;
-                    }
-                }}
+                {"max_seconds=", "The longest a sample can be (in seconds) before it is trimmed.", v => maxSeconds = GetMaxSeconds(v) },
+                { "normalize", "normalize wave files", v => normalize = v != null }
+
             };
 
             optionSet.Parse(args);
@@ -73,12 +69,23 @@ namespace VolcaSampleCmdLineTool
             }
             else if (mode == "transfer")
             {
-                DoTransferProcess(dir, outputFileInfo, sampleNumber, maxSeconds);
+                DoTransferProcess(dir, outputFileInfo, sampleNumber, maxSeconds, normalize);
             }
             else
             {
                 Console.Error.WriteLine("Unknown mode '{0}'", mode);
             }
+        }
+
+        private static double? GetMaxSeconds(string v)
+        {
+            double? maxSeconds = null;
+            double tmpMax;
+            if (Double.TryParse(v, out tmpMax))
+            {
+                maxSeconds = tmpMax;
+            }
+            return maxSeconds;
         }
 
         private static void DoErase(string eraseSlots, FileInfo outputFileInfo, string resultWav)
@@ -152,7 +159,12 @@ namespace VolcaSampleCmdLineTool
             return slotsToErase;
         }
 
-        private static void DoTransferProcess(string dir, FileInfo outputFile, int sampleNumber, double? maxSeconds)
+        private static void DoTransferProcess(
+            string dir, 
+            FileInfo outputFile, 
+            int sampleNumber, 
+            double? maxSeconds,
+            bool normalize)
         {
             var sourceDirectory = new DirectoryInfo(dir);
             if (!sourceDirectory.Exists)
@@ -165,8 +177,8 @@ namespace VolcaSampleCmdLineTool
             var wavLoader = new WavLoader(sourceDirectory, sampleNumber);
 
             var wavs = maxSeconds != null
-                ? wavLoader.LoadWavsFromDirectory(TimeSpan.FromSeconds((double) maxSeconds))
-                : wavLoader.LoadWavsFromDirectory();
+                ? wavLoader.LoadWavsFromDirectory(TimeSpan.FromSeconds((double)maxSeconds), normalize)
+                : wavLoader.LoadWavsFromDirectory(null, normalize);
 
             var wavsList = wavs.ToList();
 
